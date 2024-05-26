@@ -1,7 +1,7 @@
 import { Container, StylesDate, StylesHours } from "./styles";
 
 interface TextProps {
-  styleDate: string;
+  styleDate: string | null;
   stylesHours: string;
 }
 export function PointRecordList({ styleDate, stylesHours }: TextProps) {
