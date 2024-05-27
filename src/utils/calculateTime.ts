@@ -1,7 +1,8 @@
 import {  differenceInHours, differenceInMinutes } from "date-fns";
+import { newDate } from "./date";
 
 export function calculateCurrentTimeDifference(isoDate: string): string {
-    const currentDate = new Date();
+    const currentDate = newDate();
     const dateHora = new Date(isoDate);
 
     const hoursDifference = differenceInHours(currentDate, dateHora);
