@@ -19,11 +19,12 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { UserHistory } from "../../services/history/userHistory";
 import {
   getAllPointByUserCode,
-  // getSinglePointByUserCode,
+  getSinglePointByUserCode,
   registerUserCode,
 } from "../../services/pointRecord";
 import { format } from "date-fns";
 import { CustomizedSnackbars } from "../../components/alert";
+import { calculateCurrentTimeDifference } from "../../utils/calculateTime";
 
 interface PointRecordProps {
   id: string;
@@ -34,8 +35,8 @@ interface PointRecordProps {
 }
 
 export function Home() {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [currentTime, setCurrentTime] = useState<PointRecordProps[]>([]);
+  const [diference, setDifference] = useState("");
+  const [currentTime, setCurrentTime] = useState<string | null>(null);
   const [showSnackbar, setShowSnackbar] = useState(false);
   const [pointRecords, setPointRecords] = useState<PointRecordProps[]>([]);
 
@@ -69,8 +70,6 @@ export function Home() {
 
   const fetchPointRecords = useCallback(async () => {
     try {
-      // const hours = await getSinglePointByUserCode(String(userCode));
-      // setCurrentTime(hours.data.pointRecords);
       const response = await getAllPointByUserCode(String(userCode));
       setPointRecords(response.data.pointRecords);
     } catch (error) {
@@ -81,6 +80,28 @@ export function Home() {
   useEffect(() => {
     fetchPointRecords();
   }, [fetchPointRecords]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await getSinglePointByUserCode(String(userCode));
+        setCurrentTime(response.data.createdAt);
+      } catch (error) {
+        console.error("Erro ao obter os dados:", error);
+      }
+    };
+    fetchData();
+    const calculateDifference = () => {
+      const timeDifference = calculateCurrentTimeDifference(
+        String(currentTime)
+      );
+      setDifference(timeDifference);
+    };
+    calculateDifference();
+    const interval = setInterval(calculateDifference, 60000);
+
+    return () => clearInterval(interval);
+  }, [userCode, currentTime]);
 
   return (
     <MediaQuery>
@@ -94,9 +115,7 @@ export function Home() {
         <Header>
           <Box>
             <WatchLabel>Relógio de pontos</WatchLabel>
-            <CurrentTime>
-              {0}h {0}m
-            </CurrentTime>
+            <CurrentTime>{diference}</CurrentTime>
             <CurrentTimeLabel>Horas de hoje</CurrentTimeLabel>
           </Box>
           <Box>
@@ -104,7 +123,7 @@ export function Home() {
             <UserLabel>Usuário</UserLabel>
           </Box>
         </Header>
-        {currentTime ? (
+        {!diference ? (
           <CustomButton
             title=" Hora de entrada"
             onClick={handleRegistrationPoint}
