@@ -41,6 +41,7 @@ export function Home() {
   const [currentTime, setCurrentTime] = useState<string | null>(null);
   const [showSnackbar, setShowSnackbar] = useState(false);
   const [pointRecords, setPointRecords] = useState<PointRecordProps[]>([]);
+  const [message, setMessage] = useState("");
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -56,6 +57,7 @@ export function Home() {
           navigate("/");
         }, 3000);
         setShowSnackbar(true);
+        setMessage("Registro de ponto realizado com sucesso!");
         return response;
       } else {
         console.error("Registros de pontos nao confere");
@@ -73,6 +75,7 @@ export function Home() {
           navigate("/");
         }, 3000);
         setShowSnackbar(true);
+        setMessage("Registro de ponto finalizado com sucesso!");
         return response;
       } else {
         console.error("Registros de pontos nao confere");
@@ -131,7 +134,7 @@ export function Home() {
         <CustomizedSnackbars
           open={showSnackbar}
           onClose={() => setShowSnackbar(false)}
-          message={`Registro de ponto realizado com sucesso!`}
+          message={message}
           bgColorsSnack="success"
         />
         <Header>
