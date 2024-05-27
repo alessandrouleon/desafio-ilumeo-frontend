@@ -1,8 +1,10 @@
 import { Box } from "@mui/material";
 import {
+  CenteredBox,
   Container,
   CurrentTime,
   CurrentTimeLabel,
+  CustomTypography,
   Header,
   LeftAlignedWrapper,
   MediaQuery,
@@ -108,7 +110,7 @@ export function Home() {
       try {
         const response = await getSinglePointByUserCode(String(userCode));
         setCurrentTime(response.data.createdAt);
-        if(!response.data){
+        if (!response.data) {
           setShowCurrentTime(true);
         }
       } catch (error) {
@@ -161,16 +163,24 @@ export function Home() {
           <PreviousDaysLabel>Dias anteriores</PreviousDaysLabel>
         </LeftAlignedWrapper>
         <StyleScroll>
-          {pointRecords.map((record, index) => (
-            <PointRecordList
-              key={index}
-              styleDate={
-                record.finishedAt &&
-                format(new Date(record.finishedAt), "dd/MM/yy")
-              }
-              stylesHours={formatWorkedHours(record.workedHours)}
-            />
-          ))}
+          {pointRecords && pointRecords.length > 0 ? (
+            pointRecords.map((record, index) => (
+              <PointRecordList
+                key={index}
+                styleDate={
+                  record.finishedAt &&
+                  format(new Date(record.finishedAt), "dd/MM/yy")
+                }
+                stylesHours={formatWorkedHours(record.workedHours)}
+              />
+            ))
+          ) : (
+            <CenteredBox>
+              <CustomTypography variant="subtitle1">
+              Usuário não tem registro de ponto para mostrar!
+              </CustomTypography>
+            </CenteredBox>
+          )}
         </StyleScroll>
       </Container>
     </MediaQuery>

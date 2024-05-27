@@ -17,6 +17,22 @@ export const Header = styled.div`
   grid-template-columns: 1fr 1fr;
 `;
 
+export const CenteredBox = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-top: 2rem;
+`;
+
+export const CustomTypography = styled(Typography).attrs(() => ({
+  sx: {
+    fontSize: "0.8rem",
+    fontWeight: "300",
+    color: COLORS.NEUTRAL_400,
+  },
+}))``;
+
 export const WatchLabel = styled(Typography).attrs(() => ({
   sx: {
     fontSize: "1rem",
