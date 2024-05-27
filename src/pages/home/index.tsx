@@ -18,6 +18,7 @@ import { PointRecordList } from "../../components/pointRecordList";
 import { useLocation, useNavigate } from "react-router-dom";
 import { UserHistory } from "../../services/history/userHistory";
 import {
+  finishUserCode,
   getAllPointByUserCode,
   getSinglePointByUserCode,
   registerUserCode,
@@ -36,6 +37,7 @@ interface PointRecordProps {
 
 export function Home() {
   const [diference, setDifference] = useState("");
+  const [showcurrentTime, setShowCurrentTime] = useState(false);
   const [currentTime, setCurrentTime] = useState<string | null>(null);
   const [showSnackbar, setShowSnackbar] = useState(false);
   const [pointRecords, setPointRecords] = useState<PointRecordProps[]>([]);
@@ -50,6 +52,23 @@ export function Home() {
     try {
       if (userCodeValue === userCode) {
         const response = await registerUserCode(String(userCode));
+        setTimeout(() => {
+          navigate("/");
+        }, 3000);
+        setShowSnackbar(true);
+        return response;
+      } else {
+        console.error("Registros de pontos nao confere");
+      }
+    } catch (error) {
+      console.error("Erro ao criar registros de pontos", error);
+    }
+  };
+
+  const handleFinishUserCode = async () => {
+    try {
+      if (userCodeValue === userCode) {
+        const response = await finishUserCode(String(userCode));
         setTimeout(() => {
           navigate("/");
         }, 3000);
@@ -86,6 +105,9 @@ export function Home() {
       try {
         const response = await getSinglePointByUserCode(String(userCode));
         setCurrentTime(response.data.createdAt);
+        if(!response.data){
+          setShowCurrentTime(true);
+        }
       } catch (error) {
         console.error("Erro ao obter os dados:", error);
       }
@@ -109,13 +131,13 @@ export function Home() {
         <CustomizedSnackbars
           open={showSnackbar}
           onClose={() => setShowSnackbar(false)}
-          message="Registro de ponto realizado com sucesso!"
+          message={`Registro de ponto realizado com sucesso!`}
           bgColorsSnack="success"
         />
         <Header>
           <Box>
             <WatchLabel>Relógio de pontos</WatchLabel>
-            <CurrentTime>{diference}</CurrentTime>
+            <CurrentTime>{showcurrentTime ? "0h 0m" : diference}</CurrentTime>
             <CurrentTimeLabel>Horas de hoje</CurrentTimeLabel>
           </Box>
           <Box>
@@ -123,13 +145,13 @@ export function Home() {
             <UserLabel>Usuário</UserLabel>
           </Box>
         </Header>
-        {!diference ? (
+        {showcurrentTime ? (
           <CustomButton
             title=" Hora de entrada"
             onClick={handleRegistrationPoint}
           />
         ) : (
-          <CustomButton title=" Hora da saída" />
+          <CustomButton title=" Hora da saída" onClick={handleFinishUserCode} />
         )}
 
         <LeftAlignedWrapper>

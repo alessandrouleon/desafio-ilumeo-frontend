@@ -17,3 +17,10 @@ export const getAllPointByUserCode = async (userCode: string, page = 1) => {
     `/pointRecords/search/${page}?value=${userCode}`
   );
 };
+
+export const finishUserCode = async (userCode: string) => {
+
+ const res = api.patch(`/pointRecords/finish/?userCode=${userCode}`);
+ console.log("res::", res);
+ return res;
+};
