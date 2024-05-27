@@ -114,6 +114,7 @@ export function Home() {
           setShowCurrentTime(true);
         }
       } catch (error) {
+        setShowCurrentTime(true);
         console.error("Erro ao obter os dados:", error);
       }
     };
