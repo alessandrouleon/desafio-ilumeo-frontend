@@ -8,6 +8,7 @@
 #### Iniciar 
 yarn dev
 
+<<<<<<< HEAD
 # Tela de Login
 |                                     |                                     |
 |-------------------------------------|-------------------------------------|
@@ -21,3 +22,13 @@ yarn dev
 <img width="100%" height="600" src="src/assets/image3.png" />
 </p>
 
+=======
+## Para rodar o frontend 
+yarn dev
+
+#### rodar nodocker 
+docker compose up -d --build
+ou 
+#### acessar o arquivo Makefile e seguir os comandos
+make build
+>>>>>>> 9a1e5e5 (feat: create file docker container)
